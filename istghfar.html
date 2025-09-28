@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>درود ابراہیمی کاؤنٹر</title>
+  <style>
+    body {
+      font-family: "Noto Naskh Arabic", serif;
+      background: #f8f9fa;
+      text-align: center;
+      padding: 20px;
+    }
+    .darood {
+      font-size: 22px;
+      margin: 20px auto;
+      line-height: 2;
+      color: #2c3e50;
+    }
+    .counter {
+      font-size: 28px;
+      margin-top: 20px;
+      font-weight: bold;
+      color: #27ae60;
+    }
+    .box {
+      max-width: 800px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h1>درود ابراہیمی</h1>
+    <div id="darood" class="darood"></div>
+    <div class="counter">اب تک کتنی بار لکھا گیا: <span id="count">0</span></div>
+  </div>
+
+  <script>
+    const daroodText = "اللّٰهُمَّ صَلِّ عَلٰى مُحَمَّدٍ وَعَلٰى آلِ مُحَمَّدٍ كَمَا صَلَّيْتَ عَلٰى إِبْرَاهِيْمَ وَعَلٰى آلِ إِبْرَاهِيْمَ إِنَّكَ حَمِيْدٌ مَّجِيْدٌ۔ اللّٰهُمَّ بَارِكْ عَلٰى مُحَمَّدٍ وَعَلٰى آلِ مُحَمَّدٍ كَمَا بَارَكْتَ عَلٰى إِبْرَاهِيْمَ وَعَلٰى آلِ إِبْرَاهِيْمَ إِنَّكَ حَمِيْدٌ مَّجِيْدٌ۔";
+
+    let count = 0;
+    const daroodDiv = document.getElementById("darood");
+    const countSpan = document.getElementById("count");
+
+    function writeDarood() {
+      const p = document.createElement("p");
+      p.textContent = daroodText;
+      daroodDiv.appendChild(p);
+      count++;
+      countSpan.textContent = count.toLocaleString();
+      window.scrollTo(0, document.body.scrollHeight);
+    }
+
+    // ہر 1 سیکنڈ بعد درود لکھتا رہے گا
+    setInterval(writeDarood, 1000);
+  </script>
+</body>
+</html>
