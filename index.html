@@ -1,62 +1,113 @@
 <!DOCTYPE html>
-<html lang="ur" dir="rtl">
+<html lang="ur">
 <head>
   <meta charset="UTF-8">
-  <title>استغفار</title>
+  <title>درودِ ابراہیمی کاؤنٹر</title>
   <style>
-    body {
-      font-family: "Noto Naskh Arabic", serif;
-      background: #f8f9fa;
-      text-align: center;
-      padding: 20px;
+    body { font-family: Arial, sans-serif; text-align: center; background: #f9f9f9; }
+    h1 { color: green; }
+    #counter { font-size: 28px; font-weight: bold; margin: 15px; color: darkgreen; }
+    #daroodList { 
+      margin-top: 20px; 
+      max-height: 400px; 
+      overflow-y: auto; 
+      text-align: center; 
+      direction: rtl; 
     }
-    .darood {
-      font-size: 22px;
-      margin: 20px auto;
-      line-height: 2;
-      color: #2c3e50;
+    .daroodItem { 
+      font-size: 18px; 
+      margin: 5px; 
+      padding: 5px; 
+      border-bottom: 1px dashed #aaa; 
+      color: maroon; 
+      line-height: 1.8; 
+      white-space: pre-wrap; 
+      word-wrap: break-word;
     }
-    .counter {
-      font-size: 28px;
-      margin-top: 20px;
-      font-weight: bold;
-      color: #27ae60;
+    .btn {
+      margin: 10px;
+      padding: 8px 15px;
+      font-size: 16px;
+      background: darkblue;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
-    .box {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
+    .btn:hover { background: navy; }
+    #resetBtn { background: crimson; }
+    #resetBtn:hover { background: darkred; }
+    #addBtn { background: darkgreen; }
+    #addBtn:hover { background: green; }
   </style>
 </head>
 <body>
-  <div class="box">
-    <h1>درود ابراہیمی</h1>
-    <div id="darood" class="darood"></div>
-    <div class="counter">اب تک کتنی بار لکھا گیا: <span id="count">0</span></div>
-  </div>
+  <h1>🌹 درودِ ابراہیمی کاؤنٹر 🌹</h1>
+  <div id="counter">شروع ہو رہا ہے...</div>
+  <button id="addBtn" class="btn">➕ ایک درود شامل کریں</button>
+  <button id="resetBtn" class="btn">🔄 Reset کریں</button>
+  <div id="daroodList"></div>
 
   <script>
-    const daroodText = "ااستغفر الله ربى من كل ذنب واتوب اليه۔";
+    let count = localStorage.getItem("daroodCount") 
+                ? parseInt(localStorage.getItem("daroodCount")) 
+                : 0;
 
-    let count = 0;
-    const daroodDiv = document.getElementById("darood");
-    const countSpan = document.getElementById("count");
+    let daroodList = localStorage.getItem("daroodList") 
+                     ? JSON.parse(localStorage.getItem("daroodList")) 
+                     : [];
 
-    function writeDarood() {
-      const p = document.createElement("p");
-      p.textContent = daroodText;
-      daroodDiv.appendChild(p);
+    const counterDiv = document.getElementById("counter");
+    const daroodDiv = document.getElementById("daroodList");
+    const resetBtn = document.getElementById("resetBtn");
+    const addBtn = document.getElementById("addBtn");
+
+    // پہلے سے محفوظ لسٹ دکھائیں
+    daroodList.forEach((d, i) => {
+      const div = document.createElement("div");
+      div.className = "daroodItem";
+      div.innerText = (i+1) + ". " + d;
+      daroodDiv.appendChild(div);
+    });
+    counterDiv.innerText = "اب تک بار: " + count;
+
+    function addDarood() {
       count++;
-      countSpan.textContent = count.toLocaleString();
-      window.scrollTo(0, document.body.scrollHeight);
+      const text = "\ استغر الله الذي لااله الا هو الحي القيوم واتوب اليه";
+      
+      daroodList.push(text);
+      counterDiv.innerText = "اب تک بار: " + count;
+
+      // صرف نیا درود append کریں
+      const div = document.createElement("div");
+      div.className = "daroodItem";
+      div.innerText = count + ". " + text;
+      daroodDiv.appendChild(div);
+
+      // ہر 10 پر save کریں
+      if (count % 10 === 0) {
+        localStorage.setItem("daroodCount", count);
+        localStorage.setItem("daroodList", JSON.stringify(daroodList));
+      }
     }
 
-    // ہر 1 سیکنڈ بعد درود لکھتا رہے گا
-    setInterval(writeDarood, 1000);
+    // Reset بٹن
+    resetBtn.addEventListener("click", function() {
+      if(confirm("کیا آپ واقعی سارا ڈیٹا ری سیٹ کرنا چاہتے ہیں؟")) {
+        count = 0;
+        daroodList = [];
+        localStorage.removeItem("daroodCount");
+        localStorage.removeItem("daroodList");
+        counterDiv.innerText = "اب تک بار: " + count;
+        daroodDiv.innerHTML = "";
+      }
+    });
+
+    // Manual Add بٹن
+    addBtn.addEventListener("click", addDarood);
+
+    // Auto Mode → ہر 1 سیکنڈ بعد add
+    setInterval(addDarood, 1000);
   </script>
 </body>
 </html>
